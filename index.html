@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Tauu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper-color: #f4f1ea;
+            --envelope-color: #c4b499;
+            --ribbon-color: #7a1a1a;
+            --gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #1a1612;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Organic Grainy Texture */
+        .texture-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.04;
+            z-index: 1000;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+        }
+
+        .bg-wood {
+            background: radial-gradient(circle, #3d2b1f 0%, #1a1612 100%);
+        }
+
+        .handwritten {
+            font-family: 'Caveat', cursive;
+            letter-spacing: -0.5px;
+        }
+
+        .handwritten-varied {
+            display: inline-block;
+        }
+
+        .handwritten-varied span {
+            display: inline-block;
+            transform: rotate(var(--r)) translateY(var(--y));
+        }
+
+        .ink-smudge {
+            position: relative;
+        }
+
+        .ink-smudge::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: rgba(58, 53, 47, 0.15);
+            filter: blur(2px);
+            border-radius: 50%;
+        }
+
+        .margin-note {
+            position: absolute;
+            font-size: 0.7em;
+            opacity: 0.5;
+            transform: rotate(-8deg);
+        }
+
+        .doodle-star {
+            position: absolute;
+            font-size: 1.2em;
+            opacity: 0.3;
+        }
+
+        .emphasis {
+            font-size: 1.15em;
+            font-weight: 700;
+        }
+
+        /* Envelope Styles */
+        .envelope-wrapper {
+            position: relative;
+            perspective: 1500px;
+            cursor: pointer;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 350px;
+            height: 240px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .envelope-base {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--envelope-color);
+            border-radius: 2px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(0,0,0,0.1);
+            overflow: visible;
+        }
+
+        #envelopeFlap {
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Wax Seal Style */
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle at 30% 30%, #a82323, #7a1a1a);
+            border-radius: 50% 45% 52% 48%;
+            z-index: 20;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3), 0 0 20px rgba(168, 35, 35, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,0,0,0.1);
+            animation: sealPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes sealPulse {
+            0%, 100% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3), 0 0 20px rgba(168, 35, 35, 0.3); }
+            50% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3), 0 0 35px rgba(168, 35, 35, 0.6); }
+        }
+
+        .wax-seal::after {
+            content: 'T';
+            font-family: 'Cinzel', serif;
+            color: rgba(212, 175, 55, 0.8);
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Background orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Glow ring effect */
+        .glow-ring {
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            opacity: 0;
+            animation: ringPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+        }
+
+        /* Falling Flower Petals */
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: linear-gradient(135deg, #ffe4e9 0%, #ffd1dc 50%, #fff0f5 100%);
+            border-radius: 100% 0% 100% 0%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 200;
+            box-shadow: 0 0 8px rgba(255, 192, 203, 0.5);
+        }
+
+        .petal:nth-child(even) {
+            background: linear-gradient(135deg, #fff5f8 0%, #ffe4e9 50%, #fffafc 100%);
+        }
+
+        .petal:nth-child(3n) {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e9 50%, #ffffff 100%);
+        }
+
+        /* Deckled Edge for Letter */
+        .deckled-edge {
+            clip-path: polygon(
+                0% 2%, 3% 0%, 7% 2%, 11% 0%, 17% 1%, 23% 0%, 29% 2%, 35% 1%, 41% 0%, 48% 2%, 
+                55% 0%, 62% 1%, 69% 0%, 75% 2%, 82% 1%, 89% 0%, 95% 2%, 100% 1%, 
+                100% 98%, 96% 100%, 91% 98%, 85% 100%, 78% 99%, 71% 100%, 65% 98%, 58% 100%, 
+                51% 99%, 44% 100%, 37% 98%, 31% 100%, 24% 99%, 18% 100%, 11% 98%, 5% 100%, 0% 98%
+            );
+        }
+
+        .letter-paper {
+            background: var(--paper-color);
+            background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 100% 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 15%;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(139, 69, 19, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .letter-paper::after {
+            content: '';
+            position: absolute;
+            bottom: 25%;
+            left: 8%;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, rgba(139, 69, 19, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Fade effects */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .letter-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 12, 10, 0.95);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .letter-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Letter animation classes */
+        .letter-anim {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Poetic overlay lines */
+        #poeticLine1, #poeticLine2, #poeticLine3 {
+            transform: translateY(20px);
+        }
+
+        #poeticBday {
+            transform: translateY(20px);
+        }
+
+        #restartBtn {
+            transform: translateY(10px);
+        }
+
+        /* Wax seal glow animation */
+        @keyframes sealGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        @keyframes flame {
+            0% { transform: scaleY(1) scaleX(1) rotate(-2deg); }
+            100% { transform: scaleY(1.1) scaleX(0.9) rotate(2deg); }
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 200, 100, 0.5), 0 0 20px rgba(255, 150, 50, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(255, 200, 100, 0.7), 0 0 30px rgba(255, 150, 50, 0.5); }
+        }
+    </style>
+</head>
+<body class="bg-wood">
+    <div class="texture-overlay"></div>
+    <div class="vignette"></div>
+    
+    <!-- Poetic Candles -->
+    <div class="fixed z-30" id="candleLeft" style="left: 20%; top: 70%;">
+        <div class="relative">
+            <div class="w-3 h-16 bg-gradient-to-b from-amber-100 to-amber-300 rounded-t-full" style="border-radius: 2px 2px 50% 50%;"></div>
+            <div class="absolute bottom-0 w-4 h-1 bg-amber-700 rounded"></div>
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2">
+                <div class="w-1 h-6 bg-gradient-to-b from-orange-300 to-transparent absolute bottom-0 left-1/2 -translate-x-1/2" style="filter: blur(2px); animation: flicker 0.5s infinite alternate;"></div>
+                <div class="w-3 h-4 bg-gradient-to-b from-yellow-300 via-orange-400 to-transparent rounded-full animate-pulse" style="animation: flame 0.8s infinite alternate;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="fixed z-30" id="candleRight" style="right: 20%; top: 70%;">
+        <div class="relative">
+            <div class="w-3 h-16 bg-gradient-to-b from-amber-100 to-amber-300 rounded-t-full" style="border-radius: 2px 2px 50% 50%;"></div>
+            <div class="absolute bottom-0 w-4 h-1 bg-amber-700 rounded"></div>
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2">
+                <div class="w-1 h-6 bg-gradient-to-b from-orange-300 to-transparent absolute bottom-0 left-1/2 -translate-x-1/2" style="filter: blur(2px); animation: flicker 0.5s infinite alternate;"></div>
+                <div class="w-3 h-4 bg-gradient-to-b from-yellow-300 via-orange-400 to-transparent rounded-full animate-pulse" style="animation: flame 0.8s infinite alternate;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Background Orbs -->
+    <div class="orb bg-amber-600 w-64 h-64" style="top: 10%; left: 5%;" id="orb1"></div>
+    <div class="orb bg-red-900 w-48 h-48" style="bottom: 15%; right: 10%;" id="orb2"></div>
+    <div class="orb bg-amber-800 w-32 h-32" style="top: 60%; left: 15%;" id="orb3"></div>
+    
+    <!-- Floating Particles Container -->
+    <div id="particles"></div>
+    
+    <!-- Sparkle effects container -->
+    <div id="sparkles"></div>
+    
+    <!-- Falling Petals -->
+    <div id="petals"></div>
+
+    <div id="instruction" class="fixed bottom-12 text-center z-40 opacity-0 w-full">
+        <p class="handwritten text-2xl text-stone-400 opacity-80 italic">Click to open</p>
+    </div>
+
+    <div class="envelope-wrapper" id="wrapper">
+        <div class="envelope-container" id="envelope">
+            <!-- Letter inside envelope (slides out) -->
+            <div class="absolute inset-x-4 top-2 z-5" id="letterInside" style="display: none;">
+                <div class="letter-paper deckled-edge w-full h-32 opacity-90" style="background: var(--paper-color); background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px); background-size: 100% 2.5rem;"></div>
+            </div>
+            
+            <div class="envelope-base">
+                <!-- Back of envelope -->
+                <div class="absolute inset-0 bg-[#b8a48c] z-0"></div>
+                <!-- Envelope flap (opens up) -->
+                <div class="absolute inset-0 bg-[#c4b499] z-10 origin-top" id="envelopeFlap" style="clip-path: polygon(0 0, 100% 0, 50% 50%); border-bottom: 1px solid rgba(0,0,0,0.1);"></div>
+                <!-- Left side -->
+                <div class="absolute inset-0 bg-[#c4b499] z-0" style="clip-path: polygon(0 0, 50% 50%, 0 100%);"></div>
+                <!-- Right side -->
+                <div class="absolute inset-0 bg-[#c4b499] z-0" style="clip-path: polygon(100% 0, 100% 100%, 50% 50%);"></div>
+                <!-- Bottom flap -->
+                <div class="absolute inset-0 bg-[#a6967b] z-10 shadow-lg" style="clip-path: polygon(0 100%, 100% 100%, 50% 45%);"></div>
+            </div>
+
+            <div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none" id="ribbonGroup">
+                <div class="absolute w-full h-8 bg-[#7a1a1a] shadow-md opacity-90"></div>
+                <div class="absolute h-full w-8 bg-[#7a1a1a] shadow-md opacity-90"></div>
+                <div class="wax-seal" id="waxSeal"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="letter-overlay" id="letterOverlay">
+        <div class="letter-paper deckled-edge w-[90%] max-w-[550px] p-8 md:p-16 transform -rotate-1" id="letterContent">
+            <button class="absolute top-6 right-8 text-stone-400 hover:text-stone-800 text-3xl font-light handwritten transition-colors duration-300 hover:scale-110" id="closeBtn">×</button>
+            
+            <div class="text-[#3a352f]" id="letterText">
+                <h2 class="handwritten text-3xl mb-6 opacity-0 letter-anim" data-delay="0">Hey Tau,</h2>
+                <div class="space-y-4">
+                    <p class="handwritten text-2xl leading-relaxed opacity-85 transform rotate-[0.5deg] letter-anim" data-delay="100">
+                        <span class="emphasis">Happy Birthday!</span>
+                    </p>
+                    <p class="handwritten text-2xl leading-relaxed transform rotate-[0.2deg] letter-anim" data-delay="200" style="opacity: 0.88;">
+                        You know, some people just have this <span class="ink-smudge">way</span> about them—quiet, but somehow you <span style="opacity: 0.75;">notice</span>. That's you.
+                    </p>
+                    <p class="handwritten text-2xl leading-relaxed opacity-85 transform -rotate-[0.3deg] letter-anim" data-delay="300">
+                        I hope this year's <span class="emphasis">good</span> to you. Like, <span style="text-decoration: underline; text-decoration-style: wavy; text-decoration-color: rgba(58, 53, 47, 0.3); text-underline-offset: 4px;">actually good</span>. You've earned it.
+                    </p>
+                    <p class="handwritten text-2xl leading-relaxed opacity-85 mt-6 transform rotate-[0.4deg] letter-anim" data-delay="400">
+                        Anyway, go do something that makes you forget what day it is.
+                        <span class="margin-note" style="right: -60px; top: -15px;">↑ yes!</span>
+                    </p>
+                    <p class="handwritten text-2xl mt-4 opacity-80 transform -rotate-[0.2deg] letter-anim" data-delay="500">
+                        Enjoy it.
+                    </p>
+                    
+                    <!-- Teddy Bear Drawing -->
+                    <div class="mt-8 flex justify-center letter-anim" data-delay="600">
+                        <svg width="90" height="90" viewBox="0 0 120 120" class="opacity-70">
+                            <!-- Ears -->
+                            <circle cx="25" cy="25" r="18" fill="#8B6B5B"/>
+                            <circle cx="25" cy="25" r="10" fill="#D4A88C"/>
+                            <circle cx="95" cy="25" r="18" fill="#8B6B5B"/>
+                            <circle cx="95" cy="25" r="10" fill="#D4A88C"/>
+                            <!-- Head -->
+                            <ellipse cx="60" cy="55" rx="45" ry="40" fill="#8B6B5B"/>
+                            <!-- Muzzle -->
+                            <ellipse cx="60" cy="70" rx="22" ry="18" fill="#D4A88C"/>
+                            <!-- Nose -->
+                            <ellipse cx="60" cy="65" rx="8" ry="5" fill="#5A4035"/>
+                            <!-- Eyes -->
+                            <circle cx="42" cy="50" r="5" fill="#2D1F1A"/>
+                            <circle cx="78" cy="50" r="5" fill="#2D1F1A"/>
+                            <circle cx="43" cy="49" r="2" fill="white"/>
+                            <circle cx="79" cy="49" r="2" fill="white"/>
+                            <!-- Mouth -->
+                            <path d="M55 75 Q60 80 65 75" stroke="#5A4035" stroke-width="2" fill="none"/>
+                            <!-- Body -->
+                            <ellipse cx="60" cy="105" rx="35" ry="25" fill="#8B6B5B"/>
+                            <!-- Belly -->
+                            <ellipse cx="60" cy="105" rx="20" ry="15" fill="#D4A88C"/>
+                            <!-- Arms -->
+                            <ellipse cx="25" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(-20 25 95)"/>
+                            <ellipse cx="95" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(20 95 95)"/>
+                            <!-- Feet -->
+                            <ellipse cx="40" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
+                            <ellipse cx="80" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="mt-10 flex justify-end items-center gap-3 letter-anim" data-delay="600">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Poetic Ending Overlay -->
+    <div class="letter-overlay" id="poeticOverlay">
+        <div class="text-center p-8">
+            <!-- Teddy Bear Drawing -->
+            <svg width="80" height="80" viewBox="0 0 120 120" class="mx-auto mb-6 opacity-60">
+                <!-- Ears -->
+                <circle cx="25" cy="25" r="18" fill="#8B6B5B"/>
+                <circle cx="25" cy="25" r="10" fill="#D4A88C"/>
+                <circle cx="95" cy="25" r="18" fill="#8B6B5B"/>
+                <circle cx="95" cy="25" r="10" fill="#D4A88C"/>
+                <!-- Head -->
+                <ellipse cx="60" cy="55" rx="45" ry="40" fill="#8B6B5B"/>
+                <!-- Muzzle -->
+                <ellipse cx="60" cy="70" rx="22" ry="18" fill="#D4A88C"/>
+                <!-- Nose -->
+                <ellipse cx="60" cy="65" rx="8" ry="5" fill="#5A4035"/>
+                <!-- Eyes -->
+                <circle cx="42" cy="50" r="5" fill="#2D1F1A"/>
+                <circle cx="78" cy="50" r="5" fill="#2D1F1A"/>
+                <circle cx="43" cy="49" r="2" fill="white"/>
+                <circle cx="79" cy="49" r="2" fill="white"/>
+                <!-- Mouth -->
+                <path d="M55 75 Q60 80 65 75" stroke="#5A4035" stroke-width="2" fill="none"/>
+                <!-- Body -->
+                <ellipse cx="60" cy="105" rx="35" ry="25" fill="#8B6B5B"/>
+                <!-- Belly -->
+                <ellipse cx="60" cy="105" rx="20" ry="15" fill="#D4A88C"/>
+                <!-- Arms -->
+                <ellipse cx="25" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(-20 25 95)"/>
+                <ellipse cx="95" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(20 95 95)"/>
+                <!-- Feet -->
+                <ellipse cx="40" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
+                <ellipse cx="80" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
+            </svg>
+            
+            <p class="handwritten text-4xl md:text-5xl text-rose-200 opacity-0" id="poeticLine1" style="font-family: 'Caveat', cursive;">
+                I thought of you,
+            </p>
+            <p class="handwritten text-3xl md:text-4xl text-stone-300 mt-4 opacity-0" id="poeticLine2" style="font-family: 'Caveat', cursive;">
+                and wanted you to know
+            </p>
+            <p class="handwritten text-4xl md:text-5xl text-rose-100 mt-6 opacity-0" id="poeticLine3" style="font-family: 'Caveat', cursive;">
+                you're loved.
+            </p>
+            <p class="handwritten text-3xl md:text-4xl text-rose-200 mt-8 opacity-0" id="poeticBday" style="font-family: 'Caveat', cursive;">
+                Happy Birthday once again! 🎂
+            </p>
+            <button class="mt-10 handwritten text-2xl text-stone-500 hover:text-rose-200 transition-colors duration-300 opacity-0" id="restartBtn">
+                read again ↻
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const envelope = document.getElementById('envelope');
+            const wrapper = document.getElementById('wrapper');
+            const letterOverlay = document.getElementById('letterOverlay');
+            const instruction = document.getElementById('instruction');
+            const particlesContainer = document.getElementById('particles');
+            const sparklesContainer = document.getElementById('sparkles');
+
+            // Create floating particles
+            function createParticles() {
+                const colors = ['#d4af37', '#f4f1ea', '#c4b499', '#7a1a1a'];
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.width = Math.random() * 6 + 2 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particlesContainer.appendChild(particle);
+
+                    gsap.to(particle, {
+                        opacity: Math.random() * 0.6 + 0.2,
+                        y: -150 - Math.random() * 100,
+                        x: (Math.random() - 0.5) * 100,
+                        duration: 3 + Math.random() * 2,
+                        repeat: -1,
+                        delay: Math.random() * 2,
+                        ease: 'sine.inOut',
+                        yoyo: true
+                    });
+                }
+            }
+            createParticles();
+
+            // Animate background orbs
+            gsap.to('#orb1', {
+                y: -30,
+                x: 20,
+                duration: 4,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+            gsap.to('#orb2', {
+                y: 25,
+                x: -15,
+                duration: 5,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+            gsap.to('#orb3', {
+                y: -20,
+                x: 10,
+                duration: 3.5,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+
+            // Create sparkles for opening effect
+            function createSparkles() {
+                for (let i = 0; i < 30; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = 50 + (Math.random() - 0.5) * 40 + '%';
+                    sparkle.style.top = 50 + (Math.random() - 0.5) * 30 + '%';
+                    sparkle.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
+                    sparklesContainer.appendChild(sparkle);
+                }
+            }
+            createSparkles();
+
+            // Create falling flower petals
+            function createPetals() {
+                const petalsContainer = document.getElementById('petals');
+                for (let i = 0; i < 40; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.top = -20 + 'px';
+                    petal.style.width = (Math.random() * 10 + 10) + 'px';
+                    petal.style.height = petal.style.width;
+                    petalsContainer.appendChild(petal);
+
+                    const duration = Math.random() * 8 + 6;
+                    const delay = Math.random() * 5;
+                    const rotation = Math.random() * 360;
+
+                    gsap.to(petal, {
+                        y: window.innerHeight + 50,
+                        x: (Math.random() - 0.5) * 200,
+                        rotation: rotation + (Math.random() - 0.5) * 720,
+                        opacity: Math.random() * 0.7 + 0.3,
+                        duration: duration,
+                        delay: delay,
+                        repeat: -1,
+                        ease: "none"
+                    });
+                }
+            }
+            createPetals();
+
+            // 1. Arrival Animation - Slide in from left
+            gsap.set(envelope, { 
+                x: -400, 
+                scale: 0.6,
+                opacity: 0
+            });
+            
+            gsap.set(['#candleLeft', '#candleRight'], {
+                opacity: 0,
+                scale: 0.5
+            });
+            
+            const arrivalTl = gsap.timeline({
+                onComplete: () => {
+                    gsap.to(instruction, { opacity: 1, duration: 1.5, delay: 0.5 });
+                    
+                    // Subtle breathing animation with glow
+                    gsap.to('.wax-seal', {
+                        scale: 1.05,
+                        duration: 1.5,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut"
+                    });
+                    
+                    gsap.to(envelope, {
+                        scale: 1.02,
+                        duration: 2,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut"
+                    });
+                }
+            });
+
+            // Slide in from left with bounce
+            arrivalTl.to(envelope, {
+                opacity: 1,
+                duration: 0.3
+            })
+            .to(envelope, {
+                x: 0,
+                scale: 1,
+                duration: 1.2,
+                ease: "power2.out"
+            })
+            .to(envelope, {
+                scale: 1.03,
+                duration: 0.15,
+                ease: "power1.out"
+            })
+            .to(envelope, {
+                scale: 1,
+                duration: 0.3,
+                ease: "power1.inOut"
+            })
+            // Candles fade in
+            .to(['#candleLeft', '#candleRight'], {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.5");
+
+            // 2. Interactive Tilt with enhanced sensitivity and glow
+            let isHovering = false;
+            
+            wrapper.addEventListener('mouseenter', () => {
+                isHovering = true;
+                gsap.to(envelope, {
+                    scale: 1.1,
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+                gsap.to('.wax-seal', {
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3), 0 0 40px rgba(168, 35, 35, 0.8)',
+                    scale: 1.15,
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+            });
+            
+            wrapper.addEventListener('mouseleave', () => {
+                isHovering = false;
+                gsap.to(envelope, {
+                    rotationY: 0,
+                    rotationX: 0,
+                    scale: 1,
+                    duration: 0.6,
+                    ease: "power2.out"
+                });
+                gsap.to('.wax-seal', {
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3), 0 0 20px rgba(168, 35, 35, 0.3)',
+                    scale: 1,
+                    duration: 0.6,
+                    ease: "power2.out"
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isHovering) return;
+                
+                const rect = wrapper.getBoundingClientRect();
+                const x = (e.clientX - rect.left - rect.width / 2) / 12;
+                const y = (e.clientY - rect.top - rect.height / 2) / 12;
+                
+                gsap.to(envelope, {
+                    rotationY: x,
+                    rotationX: -y,
+                    duration: 0.3,
+                    ease: "power1.out"
+                });
+            });
+
+            // 3. Dramatic Open Sequence - Realistic
+            wrapper.addEventListener('click', () => {
+                wrapper.style.pointerEvents = 'none';
+                
+                const openTl = gsap.timeline();
+
+                // Shake before breaking
+                openTl.to(envelope, {
+                    rotation: -3,
+                    duration: 0.08,
+                    ease: "power1.inOut"
+                })
+                .to(envelope, {
+                    rotation: 3,
+                    duration: 0.08,
+                    ease: "power1.inOut"
+                })
+                .to(envelope, {
+                    rotation: -2,
+                    duration: 0.08,
+                    ease: "power1.inOut"
+                })
+                .to(envelope, {
+                    rotation: 2,
+                    duration: 0.08,
+                    ease: "power1.inOut"
+                })
+                .to(envelope, {
+                    rotation: 0,
+                    duration: 0.08,
+                    ease: "power1.inOut"
+                })
+                // Fade out candles
+                .to(['#candleLeft', '#candleRight'], {
+                    opacity: 0,
+                    scale: 0.5,
+                    duration: 0.5,
+                    ease: "power2.in"
+                })
+                // Break the seal - pieces fly apart
+                .to('#waxSeal', {
+                    scale: 1.3,
+                    opacity: 0,
+                    duration: 0.2,
+                    ease: "power2.in"
+                })
+                .to('#ribbonGroup', {
+                    scale: 1.2,
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: "power2.in"
+                }, "-=0.15")
+                // Open the envelope flap
+                .to('#envelopeFlap', {
+                    rotationX: -180,
+                    opacity: 0.6,
+                    duration: 0.6,
+                    ease: "power2.inOut"
+                })
+                // Show letter inside
+                .add(() => {
+                    document.getElementById('letterInside').style.display = 'block';
+                }, "-=0.4")
+                .from('#letterInside', {
+                    y: -80,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.out"
+                })
+                // Continue letter rising up
+                .to('#letterInside', {
+                    y: -150,
+                    scale: 1.5,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.in"
+                })
+                // Letter appears
+                .add(() => {
+                    letterOverlay.classList.add('active');
+                }, "-=0.2")
+                .from('#letterContent', {
+                    y: 100,
+                    rotation: -10,
+                    scale: 0.9,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power4.out"
+                })
+                // Staggered text reveal
+                .to('.letter-anim', {
+                    opacity: 1,
+                    y: 0,
+                    x: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    stagger: 0.15
+                }, "-=0.4")
+                
+                gsap.to(instruction, { opacity: 0, duration: 0.3 });
+                
+                // Auto-close after 18 seconds
+                setTimeout(() => {
+                    closeLetter();
+                }, 18000);
+            });
+            
+            function closeLetter() {
+                const closeTl = gsap.timeline();
+                
+                closeTl.to('.letter-anim', {
+                    opacity: 0,
+                    y: -20,
+                    duration: 0.4,
+                    stagger: 0.05,
+                    ease: "power2.in"
+                })
+                .to('#letterContent', {
+                    y: 100,
+                    rotation: 10,
+                    scale: 0.8,
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: "power2.in"
+                })
+                .to(letterOverlay, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }, "-=0.3")
+                .add(() => {
+                    letterOverlay.classList.remove('active');
+                    // Show poetic ending
+                    const poeticOverlay = document.getElementById('poeticOverlay');
+                    poeticOverlay.classList.add('active');
+                    
+                    // Animate poetic lines
+                    const poeticTl = gsap.timeline();
+                    poeticTl.to('#poeticLine1', { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" })
+                        .to('#poeticLine2', { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, "-=0.6")
+                        .to('#poeticLine3', { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, "-=0.5")
+                        .to('#poeticBday', { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, "-=0.4")
+                        .to('#restartBtn', { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.3");
+                });
+            }
+
+            document.getElementById('closeBtn').addEventListener('click', () => {
+                closeLetter();
+            });
+
+            // Restart button - go back to envelope
+            document.getElementById('restartBtn').addEventListener('click', () => {
+                const poeticOverlay = document.getElementById('poeticOverlay');
+                gsap.to(['#poeticLine1', '#poeticLine2', '#poeticLine3', '#poeticBday', '#restartBtn'], {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.in",
+                    onComplete: () => {
+                        poeticOverlay.classList.remove('active');
+                        gsap.set(['#poeticLine1', '#poeticLine2', '#poeticLine3', '#poeticBday', '#restartBtn'], { opacity: 0 });
+                        
+                        // Reset letter inside
+                        document.getElementById('letterInside').style.display = 'none';
+                        
+                        // Reset envelope flap
+                        gsap.set('#envelopeFlap', { rotationX: 0, opacity: 1 });
+                        
+                        // Bring back envelope
+                        gsap.to(envelope, {
+                            y: 0,
+                            rotation: 0,
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.8,
+                            ease: "power2.out"
+                        });
+                        gsap.to('#ribbonGroup', {
+                            scale: 1,
+                            rotation: 0,
+                            opacity: 1,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                        gsap.to('#waxSeal', {
+                            scale: 1,
+                            opacity: 1,
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                        // Bring back candles
+                        gsap.to(['#candleLeft', '#candleRight'], {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                        // Bring back instruction
+                        gsap.to(instruction, { opacity: 1, duration: 0.5 });
+                        wrapper.style.pointerEvents = 'auto';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
