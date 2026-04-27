@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Tauu</title>
+    <title>For Wild Arrow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -145,13 +145,9 @@
             50% { box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 5px rgba(0,0,0,0.3), 0 0 35px rgba(168, 35, 35, 0.6); }
         }
 
-        .wax-seal::after {
-            content: 'T';
-            font-family: 'Cinzel', serif;
-            color: rgba(212, 175, 55, 0.8);
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        .wax-seal svg {
+            width: 36px;
+            height: 36px;
         }
 
         /* Floating Particles */
@@ -395,7 +391,19 @@
             <div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none" id="ribbonGroup">
                 <div class="absolute w-full h-8 bg-[#7a1a1a] shadow-md opacity-90"></div>
                 <div class="absolute h-full w-8 bg-[#7a1a1a] shadow-md opacity-90"></div>
-                <div class="wax-seal" id="waxSeal"></div>
+                <div class="wax-seal" id="waxSeal">
+                    <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Arrow going through diagonally -->
+                        <line x1="6" y1="40" x2="44" y2="8" stroke="rgba(212,175,55,0.75)" stroke-width="1.8" stroke-linecap="round"/>
+                        <!-- Arrowhead -->
+                        <path d="M44 8 L38 10 L42 14" fill="rgba(212,175,55,0.75)"/>
+                        <!-- Arrow tail feathers -->
+                        <line x1="6" y1="40" x2="10" y2="44" stroke="rgba(212,175,55,0.6)" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="6" y1="40" x2="3" y2="43" stroke="rgba(212,175,55,0.6)" stroke-width="1.2" stroke-linecap="round"/>
+                        <!-- W letter centered -->
+                        <text x="25" y="32" text-anchor="middle" font-family="Cinzel, serif" font-size="16" font-weight="bold" fill="rgba(212,175,55,0.85)" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">W</text>
+                    </svg>
+                </div>
             </div>
         </div>
     </div>
@@ -405,61 +413,28 @@
             <button class="absolute top-6 right-8 text-stone-400 hover:text-stone-800 text-3xl font-light handwritten transition-colors duration-300 hover:scale-110" id="closeBtn">×</button>
             
             <div class="text-[#3a352f]" id="letterText">
-                <h2 class="handwritten text-3xl mb-6 opacity-0 letter-anim" data-delay="0">Hey Tau,</h2>
+                <h2 class="handwritten text-3xl mb-6 opacity-0 letter-anim" data-delay="0">Yo Arrow,</h2>
                 <div class="space-y-4">
                     <p class="handwritten text-2xl leading-relaxed opacity-85 transform rotate-[0.5deg] letter-anim" data-delay="100">
-                        <span class="emphasis">Happy Birthday!</span>
+                        <span class="emphasis">Happy Birthday bro.</span>
                     </p>
                     <p class="handwritten text-2xl leading-relaxed transform rotate-[0.2deg] letter-anim" data-delay="200" style="opacity: 0.88;">
-                        You know, some people just have this <span class="ink-smudge">way</span> about them—quiet, but somehow you <span style="opacity: 0.75;">notice</span>. That's you.
+                        You've been more like a <span class="ink-smudge">brother</span> than anything else. From day one you had my back, no questions asked. That's rare and I don't take it lightly.
                     </p>
                     <p class="handwritten text-2xl leading-relaxed opacity-85 transform -rotate-[0.3deg] letter-anim" data-delay="300">
-                        I hope this year's <span class="emphasis">good</span> to you. Like, <span style="text-decoration: underline; text-decoration-style: wavy; text-decoration-color: rgba(58, 53, 47, 0.3); text-underline-offset: 4px;">actually good</span>. You've earned it.
+                        Chemistry Masters though? Respect.
                     </p>
                     <p class="handwritten text-2xl leading-relaxed opacity-85 mt-6 transform rotate-[0.4deg] letter-anim" data-delay="400">
-                        Anyway, go do something that makes you forget what day it is.
-                        <span class="margin-note" style="right: -60px; top: -15px;">↑ yes!</span>
+                        We've done a lot together and we're nowhere near done.
+                        <span class="margin-note" style="right: -50px; top: -15px;">^ facts</span>
                     </p>
                     <p class="handwritten text-2xl mt-4 opacity-80 transform -rotate-[0.2deg] letter-anim" data-delay="500">
-                        Enjoy it.
+                        Have a mad one today. You earned it.
                     </p>
-                    
-                    <!-- Teddy Bear Drawing -->
-                    <div class="mt-8 flex justify-center letter-anim" data-delay="600">
-                        <svg width="90" height="90" viewBox="0 0 120 120" class="opacity-70">
-                            <!-- Ears -->
-                            <circle cx="25" cy="25" r="18" fill="#8B6B5B"/>
-                            <circle cx="25" cy="25" r="10" fill="#D4A88C"/>
-                            <circle cx="95" cy="25" r="18" fill="#8B6B5B"/>
-                            <circle cx="95" cy="25" r="10" fill="#D4A88C"/>
-                            <!-- Head -->
-                            <ellipse cx="60" cy="55" rx="45" ry="40" fill="#8B6B5B"/>
-                            <!-- Muzzle -->
-                            <ellipse cx="60" cy="70" rx="22" ry="18" fill="#D4A88C"/>
-                            <!-- Nose -->
-                            <ellipse cx="60" cy="65" rx="8" ry="5" fill="#5A4035"/>
-                            <!-- Eyes -->
-                            <circle cx="42" cy="50" r="5" fill="#2D1F1A"/>
-                            <circle cx="78" cy="50" r="5" fill="#2D1F1A"/>
-                            <circle cx="43" cy="49" r="2" fill="white"/>
-                            <circle cx="79" cy="49" r="2" fill="white"/>
-                            <!-- Mouth -->
-                            <path d="M55 75 Q60 80 65 75" stroke="#5A4035" stroke-width="2" fill="none"/>
-                            <!-- Body -->
-                            <ellipse cx="60" cy="105" rx="35" ry="25" fill="#8B6B5B"/>
-                            <!-- Belly -->
-                            <ellipse cx="60" cy="105" rx="20" ry="15" fill="#D4A88C"/>
-                            <!-- Arms -->
-                            <ellipse cx="25" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(-20 25 95)"/>
-                            <ellipse cx="95" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(20 95 95)"/>
-                            <!-- Feet -->
-                            <ellipse cx="40" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
-                            <ellipse cx="80" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
-                        </svg>
-                    </div>
                 </div>
                 
                 <div class="mt-10 flex justify-end items-center gap-3 letter-anim" data-delay="600">
+                    <p class="handwritten text-2xl opacity-60 italic">Jr</p>
                 </div>
             </div>
         </div>
@@ -468,49 +443,27 @@
     <!-- Poetic Ending Overlay -->
     <div class="letter-overlay" id="poeticOverlay">
         <div class="text-center p-8">
-            <!-- Teddy Bear Drawing -->
-            <svg width="80" height="80" viewBox="0 0 120 120" class="mx-auto mb-6 opacity-60">
-                <!-- Ears -->
-                <circle cx="25" cy="25" r="18" fill="#8B6B5B"/>
-                <circle cx="25" cy="25" r="10" fill="#D4A88C"/>
-                <circle cx="95" cy="25" r="18" fill="#8B6B5B"/>
-                <circle cx="95" cy="25" r="10" fill="#D4A88C"/>
-                <!-- Head -->
-                <ellipse cx="60" cy="55" rx="45" ry="40" fill="#8B6B5B"/>
-                <!-- Muzzle -->
-                <ellipse cx="60" cy="70" rx="22" ry="18" fill="#D4A88C"/>
-                <!-- Nose -->
-                <ellipse cx="60" cy="65" rx="8" ry="5" fill="#5A4035"/>
-                <!-- Eyes -->
-                <circle cx="42" cy="50" r="5" fill="#2D1F1A"/>
-                <circle cx="78" cy="50" r="5" fill="#2D1F1A"/>
-                <circle cx="43" cy="49" r="2" fill="white"/>
-                <circle cx="79" cy="49" r="2" fill="white"/>
-                <!-- Mouth -->
-                <path d="M55 75 Q60 80 65 75" stroke="#5A4035" stroke-width="2" fill="none"/>
-                <!-- Body -->
-                <ellipse cx="60" cy="105" rx="35" ry="25" fill="#8B6B5B"/>
-                <!-- Belly -->
-                <ellipse cx="60" cy="105" rx="20" ry="15" fill="#D4A88C"/>
-                <!-- Arms -->
-                <ellipse cx="25" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(-20 25 95)"/>
-                <ellipse cx="95" cy="95" rx="12" ry="18" fill="#8B6B5B" transform="rotate(20 95 95)"/>
-                <!-- Feet -->
-                <ellipse cx="40" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
-                <ellipse cx="80" cy="125" rx="15" ry="10" fill="#8B6B5B"/>
+            <!-- Flask doodle for the chemist -->
+            <svg width="60" height="80" viewBox="0 0 60 80" class="mx-auto mb-6 opacity-50">
+                <rect x="22" y="0" width="16" height="25" rx="2" fill="none" stroke="#d4af37" stroke-width="2"/>
+                <path d="M22 25 L8 65 Q5 72 12 75 L48 75 Q55 72 52 65 L38 25" fill="none" stroke="#d4af37" stroke-width="2"/>
+                <ellipse cx="30" cy="65" rx="18" ry="6" fill="rgba(212, 175, 55, 0.15)"/>
+                <circle cx="25" cy="58" r="2" fill="rgba(212, 175, 55, 0.3)"/>
+                <circle cx="35" cy="55" r="1.5" fill="rgba(212, 175, 55, 0.3)"/>
+                <circle cx="30" cy="50" r="1" fill="rgba(212, 175, 55, 0.3)"/>
             </svg>
             
             <p class="handwritten text-4xl md:text-5xl text-rose-200 opacity-0" id="poeticLine1" style="font-family: 'Caveat', cursive;">
-                I thought of you,
+                Brothers don't always share blood,
             </p>
             <p class="handwritten text-3xl md:text-4xl text-stone-300 mt-4 opacity-0" id="poeticLine2" style="font-family: 'Caveat', cursive;">
-                and wanted you to know
+                sometimes they just show up
             </p>
             <p class="handwritten text-4xl md:text-5xl text-rose-100 mt-6 opacity-0" id="poeticLine3" style="font-family: 'Caveat', cursive;">
-                you're loved.
+                and stay.
             </p>
             <p class="handwritten text-3xl md:text-4xl text-rose-200 mt-8 opacity-0" id="poeticBday" style="font-family: 'Caveat', cursive;">
-                Happy Birthday once again! 🎂
+                Happy Birthday Wild Arrow
             </p>
             <button class="mt-10 handwritten text-2xl text-stone-500 hover:text-rose-200 transition-colors duration-300 opacity-0" id="restartBtn">
                 read again ↻
@@ -838,10 +791,10 @@
                 
                 gsap.to(instruction, { opacity: 0, duration: 0.3 });
                 
-                // Auto-close after 18 seconds
+                // Auto-close after 26 seconds
                 setTimeout(() => {
                     closeLetter();
-                }, 18000);
+                }, 26000);
             });
             
             function closeLetter() {
